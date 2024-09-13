@@ -132,7 +132,7 @@ func main() {
 	supportedExt := []string{".jpg", ".jpeg", ".png", ".bmp"}
 
 	// Supported output image file types.
-	destExts := []string{".jpg", ".jpeg", ".png", ".svg"}
+	destExts := []string{".jpg", ".jpeg", ".png", ".svg", ".bin"}
 
 	// Check if source path is a local image or URL.
 	if utils.IsValidUrl(*source) {
@@ -414,6 +414,41 @@ func processor(in, out string, proc *triangle.Processor, fn triangle.Fn) (
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
+	} else if filepath.Ext(out) == ".bin" {
+		tri := &triangle.Image{
+			Processor: *proc,
+		}
+		img, err := tri.DecodeImage(input)
+		if err != nil {
+			return nil, nil, err
+		}
+		nodes, colors, err := tri.Save(img, *proc)
+		if err != nil {
+			return nil, nil, err
+		}
+		length := len(nodes)
+		if length%6 != 0 {
+			fmt.Printf("Invalid number of nodes: %d\n", length)
+			return nil, nil, errors.New("invalid number of nodes")
+		}
+
+		outBytes := make([]byte, 0, length*2+len(colors)*3)
+		outBytes = append(outBytes, byte(length>>8), byte(length&0xff))
+		for _, node := range nodes {
+			outBytes = append(outBytes, byte(node>>8))
+			outBytes = append(outBytes, byte(node&0xff))
+		}
+		outBytes = append(outBytes, colors...)
+		if len(outBytes) != length*2+2+length/2 {
+			fmt.Printf("Invalid output length: %d\n", len(outBytes))
+			return nil, nil, errors.New("invalid output length")
+		}
+		// Save the triangulated image as a binary file.
+		_, err = output.Write(outBytes)
+		if err != nil {
+			return nil, nil, err
+		}
+
 	} else {
 		tri := &triangle.Image{
 			Processor: *proc,

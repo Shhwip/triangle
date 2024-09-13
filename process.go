@@ -96,6 +96,46 @@ type Drawer interface {
 	Draw(image.Image, Processor, Fn) (image.Image, []Triangle, []Point, error)
 }
 
+func (im *Image) Save(src image.Image, proc Processor) ([]uint16, []uint8, error) {
+	var err error
+
+	width, height := src.Bounds().Dx(), src.Bounds().Dy()
+	if width <= 1 || height <= 1 {
+		err = errors.New("the image width and height must be greater than 1px")
+		return nil, nil, err
+	}
+
+	img, triangles, _ := genTriangles(src, proc)
+	if len(triangles) == 0 {
+		return nil, nil, err
+	}
+
+	outNodes := make([]uint16, len(triangles)*3*2)
+	outColors := make([]uint8, len(triangles)*3)
+
+	for i, t := range triangles {
+		p0, p1, p2 := t.Nodes[0], t.Nodes[1], t.Nodes[2]
+
+		outNodes[i*6] = uint16(p0.X)
+		outNodes[i*6+1] = uint16(p0.Y)
+		outNodes[i*6+2] = uint16(p1.X)
+		outNodes[i*6+3] = uint16(p1.Y)
+		outNodes[i*6+4] = uint16(p2.X)
+		outNodes[i*6+5] = uint16(p2.Y)
+
+		cx := float64(p0.X+p1.X+p2.X) * 0.33333
+		cy := float64(p0.Y+p1.Y+p2.Y) * 0.33333
+
+		j := (int(cx) + int(cy)*width) * 4
+		r, g, b, _ := img.Pix[j], img.Pix[j+1], img.Pix[j+2], img.Pix[j+3]
+
+		outColors[i*3] = r
+		outColors[i*3+1] = g
+		outColors[i*3+2] = b
+	}
+	return outNodes, outColors, err
+}
+
 // Draw triangulates the source image and outputs the result to a raster type.
 // It returns the number of triangles generated, the number of points and the error in case exists.
 func (im *Image) Draw(src image.Image, proc Processor, fn Fn) (image.Image, []Triangle, []Point, error) {
