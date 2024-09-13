@@ -144,7 +144,7 @@ $ triangle -out out.jpg < input/source.jpg
 You can specify a background color in case of transparent background images (`.png`) by using the `-bg` flag. This flag accepts a hexadecimal string value. For example setting the flag to `-bg=#ffffff00` will set the alpha channel of the resulted image transparent.
 
 #### Output as image or SVG
-By default the output is saved to an image file, but you can export the resulted vertices even to an SVG file. The CLI tool can recognize the output type directly from the file extension. This is a handy addition for those who wish to generate large images without guality loss.
+By default the output is saved to an image file, but you can export the resulted vertices even to an SVG file. The CLI tool can recognize the output type directly from the file extension. This is a handy addition for those who wish to generate large images without quality loss.
 
 ```bash
 $ triangle -in samples/input.jpg -out output.svg
@@ -156,8 +156,15 @@ Using with `-web` flag you can access the generated svg file directly on the web
 $ triangle -in samples/input.jpg -out output.svg -web=true
 ```
 
+#### Output raw triangles as binary data
+You can also export the vertices and color data as a .bin. This is handy for people who want to draw the triangles in a different way.
+
+```bash
+$ triangle -in samples/input.jpg -out output.bin
+```
+
 #### Supported output types
-The following output file types are supported: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.svg`.
+The following output file types are supported: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.svg`, `.bin`.
 
 ### Tweaks
 Setting a lower points threshold, the resulted image will be more like a cubic painting. You can even add a noise factor, generating a more artistic, grainy image.
