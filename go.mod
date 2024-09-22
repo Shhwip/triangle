@@ -3,6 +3,7 @@ module github.com/shhwip/triangle/v2
 go 1.18
 
 require (
+	github.com/esimov/triangle/v2 v2.0.0
 	github.com/fogleman/gg v1.0.0
 	golang.org/x/exp v0.0.0-20220407100705-7b9b53b0aca4
 	golang.org/x/image v0.0.0-20171214225156-12117c17ca67
