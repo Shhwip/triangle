@@ -21,8 +21,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/esimov/triangle/v2"
-	"github.com/esimov/triangle/v2/utils"
+	"github.com/shhwip/triangle/v2"
+	"github.com/shhwip/triangle/v2/utils"
 	"golang.org/x/image/bmp"
 	"golang.org/x/term"
 )

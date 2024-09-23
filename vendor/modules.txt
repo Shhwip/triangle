@@ -5,6 +5,8 @@ github.com/fogleman/gg
 ## explicit
 github.com/golang/freetype/raster
 github.com/golang/freetype/truetype
+# github.com/shhwip/triangle/v2 v2.0.0
+## explicit; go 1.18
 # golang.org/x/exp v0.0.0-20220407100705-7b9b53b0aca4
 ## explicit; go 1.18
 golang.org/x/exp/constraints
